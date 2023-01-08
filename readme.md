@@ -69,3 +69,15 @@ UnpackA(conn io.Reader) (*MessageA,error)
 UnpackB(conn io.Reader) (*MessageB,error)
 
 ```
+
+* ### 回复消息
+#### 请求过来的消息回复 非常有必要这样做 因为需要保证MsgId一致性
+```go
+用法一、
+var a go_jeans.MessageA
+a.Reply([]byte(""))
+用法二、
+msgA,err := go_jeans.UnpackA(*conn)
+msgA.Reply([]byte(""))
+
+```
