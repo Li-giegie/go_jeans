@@ -44,17 +44,26 @@ type MessageB struct {
 * ### 打包
 #### 选择适合的消息结构（MessageA、MessageB） 打包提供三种方法
 ```go
-//打包字节
-//入参 打包的消息内容 
-// 返回值 打包字节流、错误
-// 打包后的字节流可以直接通过socket进行发送
-PackA(msg []byte) ([]byte,error)
+// 1. 创建一个消息
+//入参 打包的消息内容
+NewMsgA(msg []byte) *MessageA
 
 //打包字符串
-PackA_String(msg string) ([]byte,error)
+NewMsgA_String(msg string) ([]byte,error)
 
 ////打包Json对象
-PackA_JSON(obj interface{}) ([]byte,error)
+NewMsgA_JSON(obj interface{}) ([]byte,error)
+
+
+// 1.创建一个消息
+msgA := NewMsgA_String("hello i'm client !")
+// 2.获取字节流 
+buf,err := msgA.Bytes()
+if err != nil {
+	painc(any(err))
+}
+
+
 ```
 
 * ### 拆包
@@ -73,10 +82,7 @@ UnpackB(conn io.Reader) (*MessageB,error)
 * ### 回复消息
 #### 请求过来的消息回复 非常有必要这样做 因为需要保证MsgId一致性
 ```go
-用法一、
-var a go_jeans.MessageA
-a.Reply([]byte(""))
-用法二、
+// 用法一、
 msgA,err := go_jeans.UnpackA(*conn)
 msgA.Reply([]byte(""))
 
