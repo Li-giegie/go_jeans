@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+option go_package = "./;go-jeans";
+
+package go_tcpPack;
+
+message MessageA {
+    uint32 MsgId = 1;
+    bytes Msg = 2;
+}
+
+message MessageB {
+    uint32 MsgId = 1;
+    bytes Msg = 2;
+    uint32 SrcAddr = 3;
+    uint32 DestApi = 4;
+    uint32 DestAddr = 5;
+}
