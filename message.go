@@ -4,9 +4,13 @@ import (
 	"encoding/json"
 )
 
+func (a *MessageA) Bytes() ([]byte,error) {
+	return _pack(a)
+}
+
 func (a *MessageA) Reply(msg []byte)([]byte,error)  {
 	a.Msg = msg
-	return _Pack(a)
+	return _pack(a)
 }
 
 func (a *MessageA) Reply_String(msg string)  ([]byte,error) {
@@ -21,9 +25,15 @@ func (a *MessageA) Reply_JSON(obj interface{}) ([]byte,error) {
 	return a.Reply(buf)
 }
 
+//------------------------------------------------------------------
+
+func (b *MessageB) Bytes() ([]byte,error) {
+	return _pack(b)
+}
+
 func (b *MessageB) Reply(msg []byte) ([]byte,error) {
 	b.Msg = msg
-	return _Pack(b)
+	return _pack(b)
 }
 
 func (b *MessageB) Reply_String(msg string) ([]byte,error) {

@@ -15,57 +15,58 @@ var count uint32
 
 var lock sync.Mutex
 
-func PackA(msg []byte) ([]byte,error) {
+func NewMsgA(msg []byte) *MessageA {
 	lock.Lock()
+	defer lock.Unlock()
 	count++
-	var msgA = &MessageA{
+	return &MessageA{
 		MsgId:         count,
 		Msg:           msg,
 	}
-	lock.Unlock()
-	return _Pack(msgA)
+
 }
 
-func PackA_String(msg string)([]byte,error)   {
-	return PackA([]byte(msg))
+func NewMsgA_String(msg string) *MessageA  {
+	return NewMsgA([]byte(msg))
 }
 
-func PackA_JSON(obj interface{})([]byte,error)   {
+func NewMsgA_JSON(obj interface{}) (*MessageA,error)   {
 	msg,err := json.Marshal(obj)
 	if err != nil {
 		return nil, err
 	}
-	return PackA(msg)
+	return NewMsgA(msg),nil
 }
 
-func PackB(msg []byte,srcAddr ,DestApi ,DestAddr uint32) ([]byte,error) {
+func NewMsgB(msg []byte,srcAddr ,DestApi ,DestAddr uint32) *MessageB {
 	lock.Lock()
+	defer lock.Unlock()
 	count++
-	var msgB = &MessageB{
+
+	return &MessageB{
 		MsgId:         count,
 		Msg:           msg,
 		SrcAddr:       srcAddr,
 		DestApi:       DestApi,
 		DestAddr:      DestAddr,
 	}
-	lock.Unlock()
-	return _Pack(msgB)
+
 }
 
-func PackB_String(msg string,srcAddr ,DestApi ,DestAddr uint32)([]byte,error)  {
-	return PackB([]byte(msg),srcAddr,DestApi,DestAddr)
+func NewMsgB_String(msg string,srcAddr ,DestApi ,DestAddr uint32) *MessageB {
+	return NewMsgB([]byte(msg),srcAddr,DestApi,DestAddr)
 }
 
-func PackB_JSON(obj interface{},srcAddr ,DestApi ,DestAddr uint32)([]byte,error)   {
+func NewMsgB_JSON(obj interface{},srcAddr ,DestApi ,DestAddr uint32)(*MessageB,error)   {
 	msg,err := json.Marshal(obj)
 	if err != nil {
 		return nil, err
 	}
 
-	return PackB(msg,srcAddr,DestApi,DestAddr)
+	return NewMsgB(msg,srcAddr,DestApi,DestAddr),nil
 }
 
-func _Pack(m protoreflect.ProtoMessage) ([]byte,error) {
+func _pack(m protoreflect.ProtoMessage) ([]byte,error) {
 	var buf = new(bytes.Buffer)
 
 	var mbuf []byte
