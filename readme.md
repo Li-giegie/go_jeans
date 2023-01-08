@@ -40,7 +40,7 @@ type MessageB struct {
 ```
 ## 使用教程
 * ### 在项目中导入包
-    go get -u github.com/Li-giegie/github.com/Li-giegie/go_jeans
+    go get -u github.com/Li-giegie/go_jeans
 * ### 打包
 #### 选择适合的消息结构（MessageA、MessageB） 打包提供三种方法
 ```go
