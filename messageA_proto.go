@@ -17,7 +17,7 @@ func NewMsgA_Proto(msg []byte) *MessageA_Proto  {
 	}
 }
 
-func (a *MessageA_Proto) Marshal() ([]byte,error) {
+func (a *MessageA_Proto) Marshal() (*bytes.Buffer,error) {
 	var buf = new(bytes.Buffer)
 	pbuf,err := proto.Marshal(a)
 	if err != nil {
@@ -29,7 +29,7 @@ func (a *MessageA_Proto) Marshal() ([]byte,error) {
 	}
 	_,err = buf.Write(pbuf)
 
-	return buf.Bytes(),err
+	return buf,err
 }
 
 func (a *MessageA_Proto) Unmarshal(conn io.Reader) (*MessageA_Proto,error) {
@@ -42,7 +42,7 @@ func (a *MessageA_Proto) Unmarshal(conn io.Reader) (*MessageA_Proto,error) {
 	return tmp,proto.Unmarshal(buf,tmp)
 }
 
-func (a *MessageA_Proto) Reply(msg []byte) ([]byte,error) {
+func (a *MessageA_Proto) Reply(msg []byte) (*bytes.Buffer,error) {
 	a.Msg = msg
 	return a.Marshal()
 }

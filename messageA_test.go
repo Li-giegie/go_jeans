@@ -9,6 +9,39 @@ import (
 )
 var w sync.WaitGroup
 
+func Test_MSGA(t *testing.T) {
+	msg := NewMsgA([]byte("hello word~"))
+	buf,err := msg.Marshal()
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	var _msg = new(MessageA)
+	_msg,err  = _msg.Unmarshal(buf)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	fmt.Println(string(_msg.Msg))
+}
+
+func Test_MSGA_Proto(t *testing.T) {
+	msg := NewMsgA_Proto([]byte("hello word~"))
+	buf,err := msg.Marshal()
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	var _msg = new(MessageA)
+
+	_msg,err  = _msg.Unmarshal(buf)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	fmt.Println(string(_msg.Msg))
+}
+
 func _msgA_Marshal(str string) *bytes.Buffer {
 
 	msg := NewMsgA([]byte(str))
@@ -75,7 +108,7 @@ func BenchmarkA(b *testing.B) {
 		// }
 
 
-		//_msgA_Unmarshal(_msgA_Marshal("hello word"))
+		_msgA_Unmarshal(_msgA_Marshal("hello word"))
 		// { _msgA_Unmarshal
 		// BenchmarkName-12    	10385392	       111.7 ns/op
 		// BenchmarkName-12    	10385392	       111.7 ns/op

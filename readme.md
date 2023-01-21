@@ -4,10 +4,20 @@
 ![simple](https://img.shields.io/badge/simple-extend-green)
 ![tcp-Pack](https://img.shields.io/badge/tcp-pack-yellowgreen)
 ![serve](https://img.shields.io/badge/network_transmission-pack-red)
+## 一个消息包含 发送、回复、接收
 
-* ### go-jeans 会把消息打包成基于 [Protobuff](https://zhuanlan.zhihu.com/p/401958878) 的字节流
-* ### 基于两种消息结构传输 ([MessageA](#消息结构)、[MessageB](#消息结构))
+* ### go-jeans 消息打包方式
+  * 基于 [Protobuff](https://zhuanlan.zhihu.com/p/401958878) 的字节流
+  * 基于 封装消息头字节流
+* ### 基于三类消息结构传输 ([MessageA](#消息结构)、[MessageB](#消息结构)、[MessageC](#消息结构))
 
+## 本框架封装了常见的三类消息格式 `_proto标识代表使用Protobuff打包格式`
+* [MessageA](#消息结构) \ [MessageA_proto](#消息结构) 由消息ID、消息组成 适用范围（个人见解）：客户端、服务端简单交互
+* [MessageB](#消息结构) \ [MessageB_proto](#消息结构) 由消息ID、消息、源地址、目的api、目的地址 组成 适用范围（个人见解）：客户端和服务端、客户端请求服务端转发到指定客户端。
+* [MessageC](#消息结构) \ [MessageC_proto](#消息结构) 与MessageB不同的是消息组成部分使用了非int类型的string类型，为什么这样做呢，在序列化和反序列化中，uint32类型占已知4个字节，比起string不确定长度不是更快速吗，更有优势？答案是速度的确如此但不能保证多用户之间的消息ID不重复这是完全使用消息ID区分的情况，如果想一些其他的办法当然也能解决ID重复问题，比如客户端之间隔离...，但想要保证每一个用户的消息的ID都不相同使用int就显得力不从心了，如果是大并发情况下产生一个重复的ID是一件非常严重和棘手的事情。
+
+
+## 不是最新的文档 完整的实例在test文件里面
 ## 消息结构
 #### MessageA 由消息ID、消息组成 适用范围（个人见解）：客户端、服务端简单交互
 ```go

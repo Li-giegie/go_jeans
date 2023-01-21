@@ -3,6 +3,7 @@ package go_jeans
 import (
 	"bytes"
 	"encoding/binary"
+	"fmt"
 	"io"
 )
 
@@ -22,33 +23,38 @@ func NewMsgB(msg []byte,SrcAddr,DestApi,DestAddr uint32) *MessageB  {
 	return &MessageB{
 		MsgId:    count,
 		Msg:      msg,
-		SrcAddr:  0,
-		DestApi:  0,
-		DestAddr: 0,
+		SrcAddr:  SrcAddr,
+		DestApi:  DestApi,
+		DestAddr: DestAddr,
 	}
 }
 
 func (a *MessageB) Marshal() (*bytes.Buffer,error) {
+	fmt.Println(a)
 	var buf = new(bytes.Buffer)
 
 	err := binary.Write(buf,binary.LittleEndian,uint32(16+len(a.Msg)))
 	if err != nil {
 		return nil, err
 	}
+
 	if err = binary.Write(buf,binary.LittleEndian,a.MsgId); err != nil {
 		return nil, err
 	}
-	if _,err = buf.Write(a.Msg);err != nil {
-		return nil, err
-	}
+
 	if err = binary.Write(buf,binary.LittleEndian,a.SrcAddr); err != nil {
 		return nil, err
 	}
-
+	fmt.Println("addr ",buf.Bytes())
 	if err = binary.Write(buf,binary.LittleEndian,a.DestApi); err != nil {
 		return nil, err
 	}
+	fmt.Println("dapi",buf.Bytes())
 	if err = binary.Write(buf,binary.LittleEndian,a.DestAddr); err != nil {
+		return nil, err
+	}
+	fmt.Println("",buf.Bytes())
+	if _,err = buf.Write(a.Msg);err != nil {
 		return nil, err
 	}
 
@@ -61,11 +67,17 @@ func (a *MessageB) Unmarshal(conn io.Reader) (*MessageB,error) {
 		return nil,err
 	}
 	var tmp = new(MessageB)
-	tmp.MsgId = binary.LittleEndian.Uint32(buf[:4])
-	tmp.Msg = buf[4:len(buf)-12]
-	tmp.SrcAddr = binary.LittleEndian.Uint32(buf[len(buf)-12:len(buf)-12+4])
-	tmp.DestApi = binary.LittleEndian.Uint32(buf[len(buf)-12+4:len(buf)-12+4+4])
-	tmp.DestAddr = binary.LittleEndian.Uint32(buf[len(buf)-12+4+4:len(buf)-12+4+4+4])
+	tmpN := 4
+	tmp.MsgId = binary.LittleEndian.Uint32(buf[:tmpN])
+	fmt.Println("id ",tmp.MsgId)
+	tmp.SrcAddr = binary.LittleEndian.Uint32(buf[tmpN:tmpN+4])
+	tmpN += 4
+	tmp.DestApi = binary.LittleEndian.Uint32(buf[tmpN:tmpN+4])
+	tmpN += 4
+	tmp.DestAddr = binary.LittleEndian.Uint32(buf[tmpN:tmpN+4])
+	tmpN += 4
+	tmp.Msg = buf[tmpN:]
+
 	return tmp,nil
 }
 

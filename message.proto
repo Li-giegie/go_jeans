@@ -16,3 +16,11 @@ message MessageB_Proto {
     uint32 DestApi = 4;
     uint32 DestAddr = 5;
 }
+
+message MessageC_Proto {
+    string MsgId = 1;
+    bytes Msg = 2;
+    string SrcAddr = 3;
+    string DestApi = 4;
+    string DestAddr = 5;
+}
