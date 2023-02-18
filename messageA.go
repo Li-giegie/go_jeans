@@ -49,8 +49,3 @@ func (a *MessageA) Unmarshal(conn io.Reader) (*MessageA,error) {
 	return tmp,nil
 }
 
-func (a *MessageA) Reply(msg []byte) (*bytes.Buffer,error) {
-	a.Msg = msg
-	return a.Marshal()
-}
-

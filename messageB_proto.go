@@ -45,8 +45,3 @@ func (a *MessageB_Proto) Unmarshal(conn io.Reader) (*MessageB_Proto,error) {
 
 	return tmp,proto.Unmarshal(buf,tmp)
 }
-
-func (a *MessageB_Proto) Reply(msg []byte) (*bytes.Buffer,error) {
-	a.Msg = msg
-	return a.Marshal()
-}
